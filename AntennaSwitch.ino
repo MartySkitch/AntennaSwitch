@@ -14,7 +14,6 @@
   const int button2 = 6;
   const int button3 = 7;
   const int button4 = 8;
-  const int statuspin   = 13;
 // ==============================================================================
 // Define Menu System text and control variables
 // ==============================================================================
@@ -31,7 +30,7 @@
 // ==============================================================================
 // Define control head operating parameters
 // ==============================================================================
-  byte button_debounce_time = 500;
+  int button_debounce_time = 500;
   unsigned long freq = 7100;
   unsigned long lastFreq = freq;
   unsigned long freqStep = 1;
@@ -102,7 +101,6 @@ void setup() {
 // ==============================================================================
 // Set pin modes
 // ==============================================================================
-    pinMode(statuspin, OUTPUT);
     pinMode(button1, INPUT);
     pinMode(button2, INPUT);
     pinMode(button3, INPUT);
@@ -122,7 +120,6 @@ void setup() {
   do_update_lcd(currentSwitch);  delay(5000);       // SPLASH SCREEN
   currentSwitch = 1;  
   do_update_lcd(currentSwitch);  // Jump to first screen
-  digitalWrite(statuspin,HIGH);
 }
 
 // ==============================================================================
