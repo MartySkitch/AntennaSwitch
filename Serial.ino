@@ -10,7 +10,7 @@ void recvWithStartEndMarkers() {
     char rc;
     while (Serial.available() > 0 && newData == false) {
         rc = Serial.read();
-        if (dbg==1)  Serial.println(rc);
+        //if (dbg==1)  Serial.println(rc);
         if (recvInProgress == true) {
             if (rc != endMarker1 and rc != endMarker2)  {
                 receivedChars[ndx] = rc;

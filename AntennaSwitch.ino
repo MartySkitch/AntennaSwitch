@@ -5,7 +5,7 @@
 // Author:  Marty Squicciarini NR3Z
 // Based on BenchDuino Example 
            char sw_version[10] = "1.0";
-           int dbg = 1;
+           int dbg = 0;
 // ==============================================================================
 // ==============================================================================
 // Physical pin assignments
@@ -44,7 +44,7 @@
   int x = 0;
   int y = 0;
   String cmd;
-  String arg[10];
+  String arg;
   int parser_stringlen = 0;
   int parser_strstart = 0;
   int parser_strstop = 0;
@@ -59,21 +59,18 @@
   boolean newData = false;
   int data =0;
   String outdata;
-  String my_address_string;
   String next_arg;
   String payload;
   char boardtype[3];
   int packetlen = 0;
   int stringlen; // String length
-  char my_address[2] = {'0', '0'};
-  int toaddress_match = 0;
   int delimiter1_match = 0;
   int delimiter2_match = 0;
   int fromaddress_match = 0;
-  int goodpacket = 0;
-  int directpacket = 0;
+  //int goodpacket = 0;
+  //int directpacket = 0;
   String command;
-  int diditflag = 1;
+//  int diditflag = 1;
   int val = 0;
   int my_address_value = 0;
   int lastCount = 0;
@@ -114,7 +111,6 @@ void setup() {
   Serial.print("STARTUP  Version ");
   Serial.println(sw_version);
   outdata = "/";
-  my_address_string = "00";
   next_arg = "";
   payload = "";
 //=== LCD SETUP =================================================================
@@ -136,61 +132,33 @@ void setup() {
 // ==============================================================================
 void loop() 
 {
-
   recvWithStartEndMarkers();
   processpayload();
 
-  button1_val = digitalRead(button1);  if (button1_val==LOW ) { do_button11(); }
-  button2_val = digitalRead(button2);  if (button2_val==LOW ) { do_button12(); }
-  button3_val = digitalRead(button3);  if (button3_val==LOW ) { do_button13(); }
-  button4_val = digitalRead(button4);  if (button4_val==LOW ) { do_button14(); }
+  button1_val = digitalRead(button1);  if (button1_val==LOW ) { do_button(1); }
+  button2_val = digitalRead(button2);  if (button2_val==LOW ) { do_button(2); }
+  button3_val = digitalRead(button3);  if (button3_val==LOW ) { do_button(3); }
+  button4_val = digitalRead(button4);  if (button4_val==LOW ) { do_button(4); }
 }
 // ==============================================================================
 // ==============================================================================
 // ===== SUBROUTINES =====
 // ==============================================================================
 // ==============================================================================
-
-
-
 //----- LCD SUBROUTINES ---------------------------------------------------------
 void do_update_lcd(int menu_item) {
   lcd.setCursor (0,0);  lcd.print(menu[menu_item][0]);
   lcd.setCursor (0,1);  lcd.print(menu[menu_item][1]);
   }
 
-//------ MENU 1 BUTTON 1 --------------------------------------------------------
-  void do_button11()  { 
-    send_msg("M1B1");
-    currentSwitch = 1;
+//------ MENU BUTTON  --------------------------------------------------------
+  void do_button(int btn)  { 
+    send_msg("Button: " + String(btn) );
+    currentSwitch = btn;
     debounce(currentSwitch);
     lcd.clear();  
     do_update_lcd(currentSwitch);
   }
-//------ MENU 1 BUTTON 2 ---------------------------------------------------------------
-  void do_button12()  { 
-    send_msg("M1B2");  
-    currentSwitch = 2;
-    debounce(currentSwitch);
-    lcd.clear();
-    do_update_lcd(currentSwitch);
-    }
-//------ MENU 1 BUTTON 3 ---------------------------------------------------------------
-  void do_button13()  {  
-    send_msg("M1B3"); 
-    currentSwitch = 3;
-    debounce(currentSwitch);
-    do_update_lcd(currentSwitch);
-    }
-//------ MENU 1 BUTTON 4 ---------------------------------------------------------------
-  void do_button14()  { 
-    send_msg("M1B4"); 
-    currentSwitch = 4;
-    debounce(currentSwitch);
-    lcd.clear();  
-    do_update_lcd(currentSwitch);
-    }
-
 
 //-------------------------------------------------------------------
 void debounce(int x)  {
@@ -199,8 +167,6 @@ void debounce(int x)  {
     if (x==3) {do {delay(button_debounce_time);} while (digitalRead(button3)==LOW); } // Debounce the button
     if (x==4) {do {delay(button_debounce_time);} while (digitalRead(button4)==LOW); } // Debounce the button
 }
-
-
 
 // ==============================================================================
 // ==============================================================================
