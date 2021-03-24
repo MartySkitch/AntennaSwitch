@@ -14,6 +14,10 @@
   const int button[] = {5, 6, 7, 8};
   int buttonVal[NumOfButtons];
 // ==============================================================================
+// Pin assignments for LEDs
+// ============================================================================== 
+  const int leds[] = {9, 10, 11, 12}; 
+// ==============================================================================
 // Pin assignment for relay
 // ==============================================================================
   const int Relay[] = {23, 24, 25, 26};
@@ -86,6 +90,9 @@ void setup() {
   for(idx=0; idx < NumOfButtons; ++idx) {
     pinMode(button[idx], INPUT);
   }
+    for(idx=0; idx < NumOfButtons; ++idx) {
+    pinMode(leds[idx], OUTPUT);
+  }
 // ==============================================================================
   Serial.print("STARTUP  Version ");
   Serial.println(sw_version);
@@ -99,6 +106,7 @@ void setup() {
   do_update_lcd(currentSwitch);  delay(5000);       // SPLASH SCREEN
   currentSwitch = 1;  
   do_update_lcd(currentSwitch);  // Jump to first screen
+  setLEDs(currentSwitch);
 }
 
 // ==============================================================================
@@ -129,6 +137,13 @@ void do_update_lcd(int menu_item) {
   lcd.setCursor (0,0);  lcd.print(menu[menu_item][0]);
   lcd.setCursor (0,1);  lcd.print(menu[menu_item][1]);
   }
+//----- LED SUBROUTINES ---------------------------------------------------------
+  void setLEDs(int btn) {
+    for(idx = 0; idx < NumOfButtons; ++idx) {
+       digitalWrite(leds[idx],LOW);
+    }
+    digitalWrite(leds[btn-1], HIGH); 
+  }
 
 //------ MENU BUTTON  --------------------------------------------------------
   void do_button(int btn)  { 
@@ -138,6 +153,7 @@ void do_update_lcd(int menu_item) {
       debounce(currentSwitch);
       lcd.clear();  
       do_update_lcd(currentSwitch);
+      setLEDs(currentSwitch);
     }
   }
 
