@@ -1,5 +1,5 @@
 //--- COMMAND PROCESSING  ----------------------------------------
-void processpayload() {
+void ProcessCommand() {
   if (newData == true) {
       String str(receivedChars);
       str.toUpperCase(); if (dbg==1)  Serial.println("str = " + str);
@@ -12,7 +12,7 @@ void processpayload() {
     //=== COMMAND TABLE =========================================================
       if (dbg==1)  Serial.println("Command >" + cmd + "<");
       if (cmd.equals("GET")) { send_msg("SW:" + String(currentSwitch)); }
-      if (cmd.equals("SET")) { do_button(arg.toInt()); }
+      if (cmd.equals("SET")) { SetSwitch(arg.toInt()); }
       command = "";
       newData = false;
   }

@@ -1,6 +1,6 @@
 //---------------------------------------------------------------
 //--- RECEIVE Serial DATA ---------------------------------------
-void recvWithStartEndMarkers() {
+void CheckSerial() {
     static boolean recvInProgress = false;
     static byte ndx = 0;
     char startMarker = '/';

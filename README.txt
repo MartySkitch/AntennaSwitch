@@ -3,10 +3,8 @@ Automated Antenna Switch
 	This will also allow remote control
 	
 Things to do
-	Remove unused variables
-	Refactor code to improve flow and better names
 	Look at other means for communication - TCP/IP or UDP
-	Code for relays
+	Work on Node-Red code for interface
 
 Completed Items
 	Refactor code to remove redundent loops - 21-Mar-21
@@ -15,4 +13,6 @@ Completed Items
 		-- Removed code for comma and only expect 1 argument for Set command
 	Refactor code to use arrays for buttons and relays - 23-Mar-21
 	Decide if I will include LEDs - 23-Mar-21
-
+	Remove unused variables - 24-Mar-21
+	Refactor code to improve flow and better names - 24-Mar-21
+	Code for relays - 24-Mar-21
