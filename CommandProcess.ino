@@ -10,7 +10,7 @@ void ProcessCommand() {
       arg = command.substring(x, command.length()); if (dbg==1)  Serial.println("arg = " + arg);
     
     //=== COMMAND TABLE =========================================================
-      if (dbg==1)  Serial.println("Command >" + cmd + "<");
+      if (dbg==1)  Serial.println(Outdata + "Command >" + cmd + "<");
       if (cmd.equals("GET")) { send_msg("SW:" + String(currentSwitch)); }
       if (cmd.equals("SET")) { SetSwitch(arg.toInt()); }
       command = "";
@@ -20,6 +20,6 @@ void ProcessCommand() {
 
 //-------------------------------------------------------------------------------
 void send_msg(String outtext) {
-  Serial.println(outtext);
+  Serial.println(Outdata + outtext);
 return;
 }

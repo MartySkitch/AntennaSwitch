@@ -7,6 +7,9 @@
            char sw_version[10] = "1.0";
            int dbg = 0;
 // ==============================================================================
+// Constants
+//==============================================================================
+  const String Outdata = "/";
 // ==============================================================================
 // Pin assignments for buttons
 // ==============================================================================
@@ -49,7 +52,6 @@
   const byte numChars = 101;
   char receivedChars[numChars];
   boolean newData = false;
-  String outdata;
   int stringlen; // String length
   String command;
 // ==============================================================================
@@ -84,8 +86,8 @@ void setup() {
   }
 // ==============================================================================
   Serial.print("STARTUP  Version ");
-  Serial.println(sw_version);
-  outdata = "/";
+  Serial.println(Outdata + sw_version);
+
 //=== SETUP =================================================================
 //MFS//  lcd.setBacklightPin(3,POSITIVE);
   lcd.init();                      // initialize the lcd 
