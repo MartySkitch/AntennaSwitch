@@ -16,3 +16,6 @@ Completed Items
 	Remove unused variables - 24-Mar-21
 	Refactor code to improve flow and better names - 24-Mar-21
 	Code for relays - 24-Mar-21
+	Work on Node-Red code for interface - 26-Mar-2021
+		-- Added Start of Packet to all messages
+		-- First pass worked but need to clean up UI and messages
