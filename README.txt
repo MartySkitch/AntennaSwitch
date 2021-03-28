@@ -19,3 +19,4 @@ Completed Items
 	Work on Node-Red code for interface - 26-Mar-2021
 		-- Added Start of Packet to all messages
 		-- First pass worked but need to clean up UI and messages
+	Added code to support Device Control Network DCN - 28-Mar-2021
