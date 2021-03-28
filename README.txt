@@ -5,6 +5,7 @@ Automated Antenna Switch
 Things to do
 	Look at other means for communication - TCP/IP or UDP
 	Work on Node-Red code for interface
+		--Need to impliment DCN to accept to/from addresses and split payload
 
 Completed Items
 	Refactor code to remove redundent loops - 21-Mar-21
@@ -20,3 +21,4 @@ Completed Items
 		-- Added Start of Packet to all messages
 		-- First pass worked but need to clean up UI and messages
 	Added code to support Device Control Network DCN - 28-Mar-2021
+	Updated Node-Red to send DCN packtets - 28-Mar-21
