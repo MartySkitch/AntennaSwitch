@@ -4,12 +4,10 @@
 // Title:  Antenna Switch
 // Author:  Marty Squicciarini NR3Z
 // Based on BenchDuino Example 
-           char sw_version[10] = "1.0";
-           int dbg = 0;
-// ==============================================================================
-// Constants
-//==============================================================================
-  const String Outdata = "/";
+   String sw_version = "1.0";
+   int dbg = 0;
+   const String AntSwAddress = "69";
+   const String CRC = "XX";  //Until I need to calculate CRC just dummy data
 // ==============================================================================
 // Pin assignments for buttons
 // ==============================================================================
@@ -44,16 +42,9 @@
 // ==============================================================================
 // Define global variables
 // ==============================================================================
-  int idx = 0;
-  int x = 0;
-  String cmd;
-  String arg;
-  String str = ""; // create a string
   const byte numChars = 101;
   char receivedChars[numChars];
   boolean newData = false;
-  int stringlen; // String length
-  String command;
 // ==============================================================================
 // Import libraries
 // ==============================================================================
@@ -78,17 +69,15 @@ void setup() {
 // ==============================================================================
 // Set pin modes
 // ==============================================================================
-  for(idx=0; idx < NumOfButtons; ++idx) {
+  for(int idx=0; idx < NumOfButtons; ++idx) {
     pinMode(button[idx], INPUT);
     pinMode(led[idx], OUTPUT);
     pinMode(relay[idx], OUTPUT);
     digitalWrite(relay[idx], HIGH); 
   }
-// ==============================================================================
-  Serial.print("STARTUP  Version ");
-  Serial.println(Outdata + sw_version);
 
-//=== SETUP =================================================================
+  send_msg(AntSwAddress, "Ver " + String(sw_version));
+
 //MFS//  lcd.setBacklightPin(3,POSITIVE);
   lcd.init();                      // initialize the lcd 
   lcd.setBacklight(HIGH);  
@@ -100,14 +89,12 @@ void setup() {
   SetLED(currentSwitch);
   SetRelay(currentSwitch);
 }
-
 // ==============================================================================
 // ==============================================================================
 // ===== MAIN LOOP =====
 // ==============================================================================
 // ==============================================================================
-void loop() 
-{
+void loop() {
   CheckSerial();
   ProcessCommand();
   CheckSwitches();
@@ -117,7 +104,7 @@ void loop()
 // ===== SUBROUTINES =====
 // ==============================================================================
 void CheckSwitches() {
-  for(idx=0; idx < NumOfButtons; ++idx) {
+  for(int idx=0; idx < NumOfButtons; ++idx) {
     buttonVal[idx] = digitalRead(button[idx]);
     if (buttonVal[idx] == LOW ) { 
       if (dbg==1)  Serial.println("  idx = " + idx);
@@ -135,14 +122,14 @@ void SetLCD(int menuItem) {
   }
 //----- LED SUBROUTINES ---------------------------------------------------------
   void SetLED(int ant) {
-    for(idx = 0; idx < NumOfButtons; ++idx) {
+    for(int idx = 0; idx < NumOfButtons; ++idx) {
        digitalWrite(led[idx],LOW);
     }
     digitalWrite(led[ant-1], HIGH); 
   }
 //----- Relay SUBROUTINES ---------------------------------------------------------
   void SetRelay(int ant) {
-    for(idx = 0; idx < NumOfButtons; ++idx) {
+    for(int idx = 0; idx < NumOfButtons; ++idx) {
        digitalWrite(relay[idx],HIGH);
     }
     digitalWrite(relay[ant-1], LOW); 
@@ -150,7 +137,7 @@ void SetLCD(int menuItem) {
 //------ MENU BUTTON  --------------------------------------------------------
   void SetSwitch(int ant)  { 
     if (ant >= 1 && ant <= NumOfButtons) {
-      send_msg("Button: " + String(ant) );
+      if (dbg==1) Serial.println("Button: " + String(ant) );
       currentSwitch = ant;
       debounce(currentSwitch);
       lcd.clear();  
@@ -164,6 +151,7 @@ void SetLCD(int menuItem) {
 void debounce(int x)  {
   do {delay(button_debounce_time);} while (digitalRead(button[x-1])==LOW);  // Debounce the button
 }
+
 
 // ==============================================================================
 // ==============================================================================
