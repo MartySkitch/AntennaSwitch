@@ -45,7 +45,7 @@ void ProcessCommand() {
       if (toAddress == AntSwAddress) {
         if (dbg==1)  Serial.println(packetStart + "packet >" + cmd + "<");
         if (cmd.equals("GET")) { send_msg(fromAddress, "SW " + String(currentSwitch)); }
-        if (cmd.equals("SET")) { SetSwitch(arg.toInt()); }
+        if (cmd.equals("SET")) { SetSwitch(fromAddress, arg.toInt()); }
         if (cmd.equals("VER")) { send_msg(fromAddress, "Ver " + String(sw_version)); }
       }
       packet = "";

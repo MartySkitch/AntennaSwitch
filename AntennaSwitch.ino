@@ -147,6 +147,12 @@ void SetLCD(int menuItem) {
     }
   }
 
+  void SetSwitch(String toAddress, int ant)  { 
+    SetSwitch(ant);
+    send_msg(toAddress, "SW " + String(currentSwitch));
+    
+  }
+
 //-------------------------------------------------------------------
 void debounce(int x)  {
   do {delay(button_debounce_time);} while (digitalRead(button[x-1])==LOW);  // Debounce the button

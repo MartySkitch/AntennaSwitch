@@ -22,3 +22,4 @@ Completed Items
 		-- First pass worked but need to clean up UI and messages
 	Added code to support Device Control Network DCN - 28-Mar-2021
 	Updated Node-Red to send DCN packtets - 28-Mar-21
+	Added Get to Set so that the current switch is known - 29-Mar-21
