@@ -3,9 +3,16 @@ Automated Antenna Switch
 	This will also allow remote control
 	
 Things to do
-	Look at other means for communication - TCP/IP or UDP
+ 
 	Work on Node-Red code for interface
-		--Need to impliment DCN to accept to/from addresses and split payload
+	Design circuit and test
+	Order box
+		-- Order Power poles for box
+		
+	
+	
+
+
 
 Completed Items
 	Refactor code to remove redundent loops - 21-Mar-21
@@ -23,3 +30,8 @@ Completed Items
 	Added code to support Device Control Network DCN - 28-Mar-2021
 	Updated Node-Red to send DCN packtets - 28-Mar-21
 	Added Get to Set so that the current switch is known - 29-Mar-21
+	Remove LCD code as it does not work well with MKR WiFi 1010 - 	17-Apr-21
+	Write code for MQTT to communication - 20-Apr-21
+		--Need to impliment XQTT pub/sub messages for Arduino - 20-Apr-21
+	Look at other means for communication - XQTT - 20-Apr-21
+		Will use a MKR WiFi 1010 board	- 20-Apr-21
