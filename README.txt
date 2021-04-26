@@ -5,15 +5,13 @@ Automated Antenna Switch
 Things to do
  
 	Work on Node-Red code for interface
+		After circuit is complete fully test node-red code
 	Design circuit and test
 	Order box
 		-- Order Power poles for box
+	Add manual switch to prevent remote control
+	Add power strip 
 		
-	
-	
-
-
-
 Completed Items
 	Refactor code to remove redundent loops - 21-Mar-21
 	Work on code to get/set switch via Serial - 22-Mar-21
@@ -35,3 +33,5 @@ Completed Items
 		--Need to impliment XQTT pub/sub messages for Arduino - 20-Apr-21
 	Look at other means for communication - XQTT - 20-Apr-21
 		Will use a MKR WiFi 1010 board	- 20-Apr-21
+	Add LED to indicate when connected to WiFi and MQTT - 25-Apr-21
+		

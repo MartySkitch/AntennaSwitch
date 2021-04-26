@@ -16,9 +16,13 @@
 // Define global variables
 // =============================================================================
 String sw_version = "1.0";
-int dbg = 0;
+int dbg = 1;
 WiFiClient net;
 MQTTClient client;
+
+#define TOPIC_SUB "Ham/AntSwitch/Cmd"
+#define TOPIC_PUB "Ham/AntSwitch/Resp"
+#define SWITCH "SWITCH"
 
 // ==============================================================================
 // Pin assignments for buttons
@@ -39,27 +43,21 @@ const int led[] = {4, 5, 6, 7};
 // ==============================================================================
 const int relay[] = {8, 9, 10, 11};
 
+// ==============================================================================
+const int connectLED = 12; 
+
 // =============================================================================
 // SETUP
 // ==============================================================================
 void setup() {
-  //Initialize serial and wait for port to open only when debugging
-  if (dbg == 1) {
-    Serial.begin(9600);
-    while (!Serial) {
-      ; // wait for serial port to connect. Needed for native USB port only
-      Serial.println("Serial port OK");
-    }
-  }
-
   // check for the WiFi module:
+  digitalWrite(connectLED, LOW);
   if (WiFi.status() == WL_NO_MODULE) {
-    if (dbg == 1) Serial.println("Communication with WiFi module failed!");
     // don't continue
     while (true);
   }
+  digitalWrite(connectLED, HIGH);
   WiFi.begin(ssid, pass);
-
   client.begin(mqttServer, mqttServerPort, net);
   client.onMessage(messageReceived);
   connect();
@@ -73,6 +71,7 @@ void setup() {
     pinMode(relay[idx], OUTPUT);
     digitalWrite(relay[idx], HIGH);
   }
+  pinMode(connectLED, OUTPUT);
   currentSwitch = 1;
   SetLED(currentSwitch);
   SetRelay(currentSwitch);
@@ -84,10 +83,11 @@ void setup() {
 void loop() {
   client.loop();
   // delay(1000); // helps eventually
-
   if (!client.connected()) {
+    digitalWrite(connectLED, LOW);
     connect();
   }
+  digitalWrite(connectLED, HIGH);  
   //  Need to get Mqtt message
   CheckSwitches();
 }
@@ -98,7 +98,6 @@ void CheckSwitches() {
   for (int idx = 0; idx < NumOfButtons; ++idx) {
     buttonVal[idx] = digitalRead(button[idx]);
     if (buttonVal[idx] == LOW ) {
-      if (dbg == 1)  Serial.println("  idx = " + String(idx));
       SetSwitch(idx + 1);
     }
   }
@@ -122,16 +121,11 @@ void SetRelay(int ant) {
 //------ BUTTONS  --------------------------------------------------------
 void SetSwitch(int ant)  {
   if (ant >= 1 && ant <= NumOfButtons) {
-    if (dbg == 1) Serial.println("Button: " + String(ant) );
     currentSwitch = ant;
     debounce(currentSwitch);
     SetLED(currentSwitch);
     SetRelay(currentSwitch);
   }
-}
-void SetSwitch(String toAddress, int ant)  {
-  SetSwitch(ant);
-  send_msg("SW", String(currentSwitch));
 }
 
 void debounce(int x)  {
@@ -145,22 +139,15 @@ void connect() {
   // attempt to connect to WiFi network:
   int status = WL_IDLE_STATUS;
   while (status != WL_CONNECTED) {
-    if (dbg == 1) Serial.print("Attempting to connect to SSID: ");
-    if (dbg == 1) Serial.println(ssid);
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
     status = WiFi.begin(ssid, pass);
 
     // wait 10 seconds for connection:
     delay(10000);
   }
-  if (dbg == 1)Serial.println("Connected to WiFi");
-  if (dbg == 1)Serial.println("connecting to broker...");
   while (!client.connect(device, key, secret)) {
-    if (dbg == 1) Serial.print(".");
     delay(1000);
   }
-
-  if (dbg == 1) Serial.println("Connected to MQTT");
 
   client.subscribe(TOPIC_SUB);
 }

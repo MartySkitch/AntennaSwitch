@@ -1,6 +1,3 @@
-
-#define TOPIC_SUB "Ham/AntSwitch/Cmd"
-#define TOPIC_PUB "Ham/AntSwitch/Resp"
 const char ssid[] = "SFNET"; // WiFI ssid  
 const char pass[] = "GRANary319"; //WiFI password  
 const char mqttServer[] = "192.168.69.165"; 
