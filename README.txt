@@ -11,6 +11,8 @@ Things to do
 		-- Order Power poles for box
 	Add manual switch to prevent remote control
 	Add power strip 
+	Make the button interupt driven so that they work without being connected
+	Add code to reconnect automatically 
 		
 Completed Items
 	Refactor code to remove redundent loops - 21-Mar-21
