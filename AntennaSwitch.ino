@@ -125,6 +125,7 @@ void SetSwitch(int ant)  {
     debounce(currentSwitch);
     SetLED(currentSwitch);
     SetRelay(currentSwitch);
+    send_msg(SWITCH, String(currentSwitch));
   }
 }
 
