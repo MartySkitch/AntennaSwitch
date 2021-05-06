@@ -23,11 +23,12 @@ void messageReceived(String &topic, String &payload) {
       send_msg(SWITCH, String(currentSwitch));
     }
     else if (strcmp(charCmd, "SET") == 0) {
-      SetSwitch(sw);
+      newSwitch = sw; 
+      SetSwitch();
       send_msg(cmd, String(currentSwitch));
       send_msg(SWITCH, String(currentSwitch));      
     }
-    delay(1000);
+    delayMicroseconds(1000);
   }
 }
 

@@ -1,3 +1,4 @@
+
 // ==============================================================================
 // Title:  Antenna Switch
 // Author:  Marty Squicciarini NR3Z
@@ -28,15 +29,16 @@ MQTTClient client;
 // Pin assignments for buttons
 // ==============================================================================
 const int NumOfButtons = 4;
-const int button[] = {0, 1, 2, 3};
+const int button[] = {4, 5, 6, 7};
 int buttonVal[NumOfButtons];
 int currentSwitch = 0;
 int button_debounce_time = 500;
+volatile int newSwitch = 0;   //The interrupt will update this 
 
 // ==============================================================================
 // Pin assignments for LEDs
 // ==============================================================================
-const int led[] = {4, 5, 6, 7};
+const int led[] = {0, 1, 2, 3};
 
 // ==============================================================================
 // Pin assignment for relay
@@ -44,24 +46,12 @@ const int led[] = {4, 5, 6, 7};
 const int relay[] = {8, 9, 10, 11};
 
 // ==============================================================================
-const int connectLED = 12; 
+const int connectLED = 12;
 
 // =============================================================================
 // SETUP
 // ==============================================================================
 void setup() {
-  // check for the WiFi module:
-  digitalWrite(connectLED, LOW);
-  if (WiFi.status() == WL_NO_MODULE) {
-    // don't continue
-    while (true);
-  }
-  digitalWrite(connectLED, HIGH);
-  WiFi.begin(ssid, pass);
-  client.begin(mqttServer, mqttServerPort, net);
-  client.onMessage(messageReceived);
-  connect();
-
   // ==============================================================================
   // Set pin modes
   // ==============================================================================
@@ -70,11 +60,23 @@ void setup() {
     pinMode(led[idx], OUTPUT);
     pinMode(relay[idx], OUTPUT);
     digitalWrite(relay[idx], HIGH);
+    attachInterrupt(digitalPinToInterrupt(button[idx]), CheckSwitches, LOW);
   }
   pinMode(connectLED, OUTPUT);
   currentSwitch = 1;
   SetLED(currentSwitch);
   SetRelay(currentSwitch);
+  
+  // check for the WiFi module:
+  digitalWrite(connectLED, LOW);
+  if (WiFi.status() == WL_NO_MODULE) {
+    // don't continue
+    while (true);
+  }
+  WiFi.begin(ssid, pass);
+  client.begin(mqttServer, mqttServerPort, net);
+  client.onMessage(messageReceived);
+  connect();
 }
 
 // ==============================================================================
@@ -82,14 +84,13 @@ void setup() {
 // ==============================================================================
 void loop() {
   client.loop();
-  // delay(1000); // helps eventually
+  // delayMicroseconds(1000); // helps eventually
   if (!client.connected()) {
     digitalWrite(connectLED, LOW);
     connect();
   }
-  digitalWrite(connectLED, HIGH);  
   //  Need to get Mqtt message
-  CheckSwitches();
+    SetSwitch();
 }
 // ==============================================================================
 // ===== SUBROUTINES =====
@@ -98,31 +99,32 @@ void CheckSwitches() {
   for (int idx = 0; idx < NumOfButtons; ++idx) {
     buttonVal[idx] = digitalRead(button[idx]);
     if (buttonVal[idx] == LOW ) {
-      SetSwitch(idx + 1);
+      newSwitch = idx + 1;
+//      SetSwitch(idx + 1);
+//      debounce(idx + 1);
     }
   }
 }
 
 // ==============================================================================
 //----- LED SUBROUTINES ---------------------------------------------------------
-void SetLED(int ant) {
+void SetLED(int swtch) {
   for (int idx = 0; idx < NumOfButtons; ++idx) {
     digitalWrite(led[idx], LOW);
   }
-  digitalWrite(led[ant - 1], HIGH);
+  digitalWrite(led[swtch - 1], HIGH);
 }
 //----- Relay SUBROUTINES ---------------------------------------------------------
-void SetRelay(int ant) {
+void SetRelay(int swtch) {
   for (int idx = 0; idx < NumOfButtons; ++idx) {
     digitalWrite(relay[idx], HIGH);
   }
-  digitalWrite(relay[ant - 1], LOW);
+  digitalWrite(relay[swtch - 1], LOW);
 }
 //------ BUTTONS  --------------------------------------------------------
-void SetSwitch(int ant)  {
-  if (ant >= 1 && ant <= NumOfButtons) {
-    currentSwitch = ant;
-    debounce(currentSwitch);
+void SetSwitch()  {
+  if (currentSwitch != newSwitch) {
+    currentSwitch = newSwitch;
     SetLED(currentSwitch);
     SetRelay(currentSwitch);
     send_msg(SWITCH, String(currentSwitch));
@@ -131,7 +133,7 @@ void SetSwitch(int ant)  {
 
 void debounce(int x)  {
   do {
-    delay(button_debounce_time);
+    delayMicroseconds(button_debounce_time);
   } while (digitalRead(button[x - 1]) == LOW); // Debounce the button
 }
 
@@ -140,16 +142,16 @@ void connect() {
   // attempt to connect to WiFi network:
   int status = WL_IDLE_STATUS;
   while (status != WL_CONNECTED) {
+    digitalWrite(connectLED, LOW);
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
     status = WiFi.begin(ssid, pass);
-
     // wait 10 seconds for connection:
-    delay(10000);
+    delayMicroseconds(10000);
   }
   while (!client.connect(device, key, secret)) {
-    delay(1000);
+    delayMicroseconds(1000);
   }
-
+  digitalWrite(connectLED, HIGH);
   client.subscribe(TOPIC_SUB);
 }
 
