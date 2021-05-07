@@ -10,9 +10,11 @@ Things to do
 	Order box
 		-- Order Power poles for box
 	Add manual switch to prevent remote control
+		No sure if this will be needed since push buttons are interupt enabled
 	Add power strip 
-	Make the button interupt driven so that they work without being connected
 	Add code to reconnect automatically 
+		The new code does seem to be working but will continue to test
+	
 		
 Completed Items
 	Refactor code to remove redundent loops - 21-Mar-21
@@ -36,4 +38,4 @@ Completed Items
 	Look at other means for communication - XQTT - 20-Apr-21
 		Will use a MKR WiFi 1010 board	- 20-Apr-21
 	Add LED to indicate when connected to WiFi and MQTT - 25-Apr-21
-		
+	Make the button interupt driven so that they work without being connected - 4-May-21		
